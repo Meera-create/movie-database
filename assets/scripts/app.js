@@ -13,7 +13,7 @@ const movieList = document.getElementById('movie-list');
 const movieElement = document.querySelector('movie-element');
 const deleteModal = document.getElementById('delete-modal');
 const notDeleteBtn = document.querySelectorAll('.btn--passive')[1];
-const confirmDeleteBtn = document.querySelector('.btn--danger');
+let confirmDeleteBtn = document.querySelector('.btn--danger');
 const entryText = document.getElementById('entry-text');
 
 
@@ -99,14 +99,11 @@ const createMovieObj = () => {
 
 const closeDeleteModal = () => {
     deleteModal.classList.remove('visible');
+    //notDeleteBtn.removeEventListener('click',);
 }
 
-
-const deleteMovieEntry = (chosenID) => {
-    deleteModal.classList.add('visible');
-
-    notDeleteBtn.addEventListener('click', closeDeleteModal);
-    confirmDeleteBtn.addEventListener('click', () => {
+const removeMovie = (chosenID) => {
+     
          let movieIndex = 0;
     for ( const film of moviesArray) {
         if (film.id === chosenID) {
@@ -120,9 +117,23 @@ const deleteMovieEntry = (chosenID) => {
         movieList.removeChild(movieToRemove);
         deleteModal.classList.remove('visible');
         updateUI();
-    });
+    }
 
-   
+const deleteMovieEntry = (chosenID) => {
+    deleteModal.classList.add('visible');
+
+    confirmDeleteBtn.replaceWith(confirmDeleteBtn.cloneNode(true));
+
+    confirmDeleteBtn = deleteModal.querySelector('.btn--danger');
+    //copy the button and replace with this new one, so the old event listener will not run
+
+    notDeleteBtn.removeEventListener('click', closeDeleteModal);
+    //remove the event listener 
+    notDeleteBtn.addEventListener('click', closeDeleteModal);
+
+    confirmDeleteBtn.addEventListener('click', removeMovie.bind(null, chosenID))
+    
+    
 }
 
 
